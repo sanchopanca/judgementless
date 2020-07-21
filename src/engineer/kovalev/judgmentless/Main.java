@@ -1,5 +1,6 @@
 package engineer.kovalev.judgmentless;
 
+import javax.swing.SwingUtilities;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -11,11 +12,15 @@ public class Main {
     public static void main(String[] args) {
         initialize();
 
+        final GUI[] gui = new GUI[1];
+        SwingUtilities.invokeLater(() -> gui[0] = new GUI());
+
         GeminiNetworkClient nc = new GeminiNetworkClient();
         try {
             GeminiResponse response = nc.makeRequest(new URL("gemini://gemini.circumlunar.space"));
             if (response.isSuccessful()) {
                 System.out.println(response.getBody());
+                gui[0].textArea.setText(response.getBody());
             } else {
                 System.out.println("ERROR:");
                 System.out.println(response.getError());
